@@ -10,26 +10,33 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RiversDAO {
+public class RiversDAO 
+{
 
-	public List<River> getAllRivers() {
+	public List<River> getAllRivers() 
+	{
 		final String sql = "SELECT id, name FROM river";
 
 		List<River> rivers = new LinkedList<River>();
 
-		try {
+		try 
+		{
 			Connection conn = DBConnect.getConnection();
 
 			PreparedStatement st = conn.prepareStatement(sql);
 
 			ResultSet res = st.executeQuery();
 
-			while (res.next()) {
+			while (res.next()) 
+			{
+				rivers.add(new River(res.getInt("id"), res.getString("name")));
 			}
-			rivers.add(new River(res.getInt("id"), res.getString("name")));
+			
 
 			conn.close();
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
@@ -38,25 +45,30 @@ public class RiversDAO {
 
 	}
 
-	public List<Flow> getAllFlows(List<River> rivers) {
+	public List<Flow> getAllFlows(List<River> rivers) 
+	{
 		final String sql = "SELECT id, day, flow, river FROM flow";
 
 		List<Flow> flows = new LinkedList<Flow>();
 
-		try {
+		try
+		{
 			Connection conn = DBConnect.getConnection();
 
 			PreparedStatement st = conn.prepareStatement(sql);
 
 			ResultSet res = st.executeQuery();
 
-			while (res.next()) {
+			while (res.next())
+			{
 				flows.add(new Flow(res.getDate("day").toLocalDate(), res.getDouble("flow"),
 						rivers.get(rivers.indexOf(new River(res.getInt("river"))))));
 			}
 
 			conn.close();
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
@@ -65,7 +77,8 @@ public class RiversDAO {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		RiversDAO dao = new RiversDAO();
 
 		List<River> rivers = dao.getAllRivers();
